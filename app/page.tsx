@@ -130,8 +130,6 @@ export default function Home() {
     } else if (session.role !== 'supervisor' && ['dashboard', 'ai', 'analytics'].includes(activeTab)) {
       setActiveTab('excel');
       router.replace('/excel-processor');
-    } else if (session.role === 'supervisor' && activeTab === 'dashboard') {
-      router.replace('/dashboard');
     } else if (session.role === 'user' && activeTab === 'excel') {
       router.replace('/excel-processor');
     }
