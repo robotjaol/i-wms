@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/components/SessionContext';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const USERS = [
   { username: 'supervisor', password: '321321', role: 'supervisor' },
@@ -48,57 +49,64 @@ export default function Login() {
       {/* Decorative blurred gradients */}
       <div className="absolute -top-32 -left-32 w-72 sm:w-96 h-72 sm:h-96 bg-gradient-to-tr from-blue-400/40 to-cyan-300/20 rounded-full blur-3xl z-0 animate-float" />
       <div className="absolute -bottom-24 -right-24 w-56 sm:w-80 h-56 sm:h-80 bg-gradient-to-br from-orange-300/30 to-yellow-200/20 rounded-full blur-2xl z-0 animate-float2" />
-      <form
-        onSubmit={handleLogin}
-        className={`relative z-10 w-full max-w-md bg-white/30 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 sm:p-10 flex flex-col gap-6 sm:gap-8 border border-white/40 glass-card ${shake ? 'animate-shake' : ''}`}
-        autoComplete="off"
-      >
-        <div className="flex flex-col items-center gap-2 mb-2 min-w-0">
-          <Image src="/unilever-logo.svg" alt="Unilever Logo" width={48} height={48} className="drop-shadow-xl w-12 h-12 sm:w-14 sm:h-14" />
-          <span className="text-xs tracking-widest uppercase text-[#1CAAD9] bg-white/60 px-3 py-1 rounded-full mb-1 shadow">i-WMS Login</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-[#1C1C2A] drop-shadow-lg">Welcome Back</h2>
-          <p className="text-xs sm:text-sm text-gray-500 font-medium">Sign in to your intelligent warehouse</p>
-        </div>
-        <div className="flex flex-col gap-2 min-w-0">
-          <label className="text-[#1CAAD9] font-semibold text-sm sm:text-base">Username</label>
-          <input
-            className={`px-3 sm:px-4 py-2 rounded-xl bg-white/70 text-[#1C1C2A] border-2 focus:outline-none focus:border-[#1CAAD9] transition-all shadow-inner font-medium placeholder-gray-400 text-sm sm:text-base ${error ? 'border-red-400' : 'border-transparent'}`}
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            autoFocus
-            placeholder="Enter username"
-            disabled={loading}
-          />
-        </div>
-        <div className="flex flex-col gap-2 min-w-0">
-          <label className="text-[#1CAAD9] font-semibold text-sm sm:text-base">Password</label>
-          <input
-            type="password"
-            className={`px-3 sm:px-4 py-2 rounded-xl bg-white/70 text-[#1C1C2A] border-2 focus:outline-none focus:border-[#1CAAD9] transition-all shadow-inner font-medium placeholder-gray-400 text-sm sm:text-base ${error ? 'border-red-400' : 'border-transparent'}`}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            placeholder="Enter password"
-            disabled={loading}
-          />
-        </div>
-        <div className="flex items-center gap-2 min-w-0">
-          <input type="checkbox" id="remember" className="accent-blue-400" disabled />
-          <label htmlFor="remember" className="text-gray-400 text-xs sm:text-sm">Remember me (coming soon)</label>
-        </div>
-        {error && <div className="text-red-400 text-center font-semibold animate-fadeIn text-base">{error}</div>}
-        <button
-          type="submit"
-          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#1CAAD9] to-orange-400 text-white font-bold shadow-lg hover:scale-105 hover:shadow-xl transition-transform text-base sm:text-lg tracking-wide disabled:opacity-60 disabled:cursor-not-allowed"
-          disabled={loading}
+      <AnimatePresence>
+        <motion.form
+          key="login-form"
+          onSubmit={handleLogin}
+          initial={{ opacity: 0, y: 32 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.96, y: 32 }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          className={`relative z-10 w-full max-w-md bg-white/30 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 sm:p-10 flex flex-col gap-6 sm:gap-8 border border-white/40 glass-card ${shake ? 'animate-shake' : ''}`}
+          autoComplete="off"
         >
-          {loading ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
-              Signing in...
-            </span>
-          ) : 'Login'}
-        </button>
-      </form>
+          <div className="flex flex-col items-center gap-2 mb-2 min-w-0">
+            <Image src="/unilever-logo.svg" alt="Unilever Logo" width={48} height={48} className="drop-shadow-xl w-12 h-12 sm:w-14 sm:h-14" />
+            <span className="text-xs tracking-widest uppercase text-[#1CAAD9] bg-white/60 px-3 py-1 rounded-full mb-1 shadow">i-WMS Login</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-[#1C1C2A] drop-shadow-lg">Welcome Back</h2>
+            <p className="text-xs sm:text-sm text-gray-500 font-medium">Sign in to your intelligent warehouse</p>
+          </div>
+          <div className="flex flex-col gap-2 min-w-0">
+            <label className="text-[#1CAAD9] font-semibold text-sm sm:text-base">Username</label>
+            <input
+              className={`px-3 sm:px-4 py-2 rounded-xl bg-white/70 text-[#1C1C2A] border-2 focus:outline-none focus:border-[#1CAAD9] transition-all shadow-inner font-medium placeholder-gray-400 text-sm sm:text-base ${error ? 'border-red-400' : 'border-transparent'}`}
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              autoFocus
+              placeholder="Enter username"
+              disabled={loading}
+            />
+          </div>
+          <div className="flex flex-col gap-2 min-w-0">
+            <label className="text-[#1CAAD9] font-semibold text-sm sm:text-base">Password</label>
+            <input
+              type="password"
+              className={`px-3 sm:px-4 py-2 rounded-xl bg-white/70 text-[#1C1C2A] border-2 focus:outline-none focus:border-[#1CAAD9] transition-all shadow-inner font-medium placeholder-gray-400 text-sm sm:text-base ${error ? 'border-red-400' : 'border-transparent'}`}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Enter password"
+              disabled={loading}
+            />
+          </div>
+          <div className="flex items-center gap-2 min-w-0">
+            <input type="checkbox" id="remember" className="accent-blue-400" disabled />
+            <label htmlFor="remember" className="text-gray-400 text-xs sm:text-sm">Remember me (coming soon)</label>
+          </div>
+          {error && <div className="text-red-400 text-center font-semibold animate-fadeIn text-base">{error}</div>}
+          <button
+            type="submit"
+            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#1CAAD9] to-orange-400 text-white font-bold shadow-lg hover:scale-105 hover:shadow-xl transition-transform text-base sm:text-lg tracking-wide disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
+                Signing in...
+              </span>
+            ) : 'Login'}
+          </button>
+        </motion.form>
+      </AnimatePresence>
       <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(40px); }

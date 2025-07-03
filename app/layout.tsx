@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   description: 'Advanced warehouse management system with AI-powered analytics and real-time monitoring',
   keywords: 'warehouse, management, AI, analytics, logistics, automation',
   authors: [{ name: 'i-WMS Team' }],
-  viewport: 'width=device-width, initial-scale=1',
 };
 
 export default function RootLayout({

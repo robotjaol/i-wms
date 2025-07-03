@@ -21,6 +21,7 @@ import {
   X
 } from 'lucide-react';
 import { queryAI } from '@/lib/ai';
+import { useSession } from './SessionContext';
 
 interface Message {
   id: string;
@@ -45,10 +46,12 @@ export default function AIAssistant() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [showQuickPrompts, setShowQuickPrompts] = useState(true);
+  // Show quick prompts if there are no messages
+  const showQuickPrompts = messages.length === 0;
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [isSupervisor, setIsSupervisor] = useState(true);
+  const { session } = useSession();
+  const isSupervisor = session?.role === 'supervisor';
 
   const quickPrompts: QuickPrompt[] = [
     {
@@ -96,11 +99,6 @@ export default function AIAssistant() {
     }
   }, [inputValue]);
 
-  useEffect(() => {
-    // Read supervisor mode from localStorage (or context if available)
-    setIsSupervisor(localStorage.getItem('supervisorMode') === 'true');
-  }, []);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -122,7 +120,7 @@ export default function AIAssistant() {
 
     try {
       // Pass supervisor_mode header
-      const aiResponse = await queryAI({ message: content.trim() }, { supervisor_mode: isSupervisor ? 'true' : 'false' });
+      const aiResponse = await queryAI({ message: content.trim() }, { 'Supervisor-Mode': isSupervisor ? 'true' : 'false' });
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
@@ -146,12 +144,12 @@ export default function AIAssistant() {
 
   const handleQuickPrompt = (prompt: QuickPrompt) => {
     handleSendMessage(prompt.prompt);
-    setShowQuickPrompts(false);
+    // setShowQuickPrompts(false); // This state is now managed by the useEffect hook
   };
 
   const clearChat = () => {
     setMessages([]);
-    setShowQuickPrompts(true);
+    // setShowQuickPrompts(true); // This state is now managed by the useEffect hook
   };
 
   const copyMessage = async (content: string) => {
@@ -216,38 +214,36 @@ export default function AIAssistant() {
 
       {/* Quick Prompts */}
       <AnimatePresence>
-        {showQuickPrompts && messages.length === 1 && (
+        {showQuickPrompts && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="p-4 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50"
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+            className="mb-6 p-6 rounded-2xl glass-card shadow-lg flex flex-col items-center text-center"
           >
-            <div className="flex items-center space-x-2 mb-4">
-              <Sparkles className="w-5 h-5 text-purple-600" aria-hidden="true" />
-              <h3 className="text-lg font-semibold text-gray-900">Quick Prompts</h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Sparkles className="w-8 h-8 text-purple-400 mb-2" />
+            <h2 className="text-lg font-semibold mb-2 text-gray-900">Quick Prompts</h2>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
               {quickPrompts.map((prompt) => (
-                <motion.button
-                  key={prompt.id}
-                  onClick={() => handleQuickPrompt(prompt)}
-                  className="text-left p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="flex items-start space-x-3">
-                    <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${prompt.color} flex items-center justify-center flex-shrink-0`}>
-                      <prompt.icon className="w-4 h-4 text-white" aria-hidden="true" />
+                <li key={prompt.id}>
+                  <button
+                    onClick={() => handleQuickPrompt(prompt)}
+                    className="w-full text-left p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  >
+                    <div className="flex items-start space-x-3">
+                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${prompt.color} flex items-center justify-center flex-shrink-0`}>
+                        <prompt.icon className="w-4 h-4 text-white" aria-hidden="true" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-gray-900 text-sm">{prompt.title}</h4>
+                        <p className="text-xs text-gray-600 mt-1 truncate">{prompt.description}</p>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 text-sm">{prompt.title}</h4>
-                      <p className="text-xs text-gray-600 mt-1 truncate">{prompt.description}</p>
-                    </div>
-                  </div>
-                </motion.button>
+                  </button>
+                </li>
               ))}
-            </div>
+            </ul>
+            <p className="text-xs text-gray-500 mt-3">Try clicking a prompt or continue typing your own question!</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -281,41 +277,11 @@ export default function AIAssistant() {
                 <div className={`flex-1 min-w-0 ${
                   message.type === 'user' ? 'text-right' : ''
                 }`}>
-                  <div className={`inline-block p-4 rounded-2xl ${
-                    message.type === 'user'
-                      ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white'
-                      : 'bg-white border border-gray-200 text-gray-900'
-                  }`}>
-                    {message.isLoading ? (
-                      <div className="flex items-center space-x-2">
-                        <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-                        <span className="text-sm">AI is thinking...</span>
+                  <div className={`inline-block p-4 rounded-2xl ${message.type === 'user' ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white' : 'bg-white border border-gray-200 text-gray-900'} shadow-md`}>
+                        {typeof message.content === 'object'
+                          ? (message.content.answer || JSON.stringify(message.content))
+                          : message.content}
                       </div>
-                    ) : message.error ? (
-                      <div className="flex items-start space-x-2">
-                        <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                        <span className="text-sm">{message.error}</span>
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                        <div className={`flex items-center space-x-2 text-xs ${
-                          message.type === 'user' ? 'text-white/80' : 'text-gray-500'
-                        }`}>
-                          <span>{formatTime(message.timestamp)}</span>
-                          {message.type === 'assistant' && (
-                            <button
-                              onClick={() => copyMessage(message.content)}
-                              className="hover:text-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 rounded"
-                              aria-label="Copy message"
-                            >
-                              <Copy className="w-3 h-3" aria-hidden="true" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
                 </div>
               </div>
             </motion.div>

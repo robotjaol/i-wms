@@ -312,13 +312,7 @@ async def query_endpoint(query: str = Form(...), context_id: str = Form(None), s
     session.close()
     context = summarize_records(records)
     explanation = "This answer is based on the summarized warehouse activity data from the last 30 days. The context JSON contains daily, shift, area, and route breakdowns. If you need to see the exact data used, ask: 'how did you get this value?'"
-    # If question is not about warehouse data, fallback
-    if not any(word in query.lower() for word in ["pallet", "shift", "area", "agv", "cycle", "station", "fetch", "deliver", "batch", "quantity", "summary", "compare", "today", "yesterday", "route", "performance", "stock", "data"]):
-        return {
-            "answer": "I'm currently connected to your warehouse activity data. Please rephrase your question to refer to a metric, date, location, or shift.",
-            "context_json": context,
-            "explanation": explanation
-        }
+    # Pass all questions to LLM, do not restrict by keywords
     # Pass context to LLM
     ai_answer = await query_rag(query, context)
     return {

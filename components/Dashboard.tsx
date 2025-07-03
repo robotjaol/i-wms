@@ -57,6 +57,7 @@ export default function Dashboard() {
   useEffect(() => {
     setIsLoading(true);
     fetch('/api/dashboard', {
+      method: 'POST',
       headers: { 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_KEY}` }
     })
       .then(res => {
