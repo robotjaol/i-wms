@@ -1,0 +1,41 @@
+# Sample Excel File Structure
+
+This is a placeholder for the sample Excel file. The actual file should be created with the following structure:
+
+## Sheet4 Structure (Required)
+
+| Column | Header | Description | Example |
+|--------|--------|-------------|---------|
+| A | Fetch Station | Station where pallet is fetched | "Button Pallet Position Tube" |
+| B | Deliver Station | Station where pallet is delivered | "Pallet GR Position Tube" |
+| C | Date | Date of operation | "2024/01/15" |
+| D | Start Time | Start time of operation | "2024/01/15 08:30:00" |
+| E | Fetch Time | Time when pallet was fetched | "2024/01/15 08:35:00" |
+| F | Delivery Time | Time when pallet was delivered | "2024/01/15 08:42:00" |
+
+## Required Data Patterns
+
+1. **Pallet GR Entries**: Must contain "Pallet GR" in the station names for filtering
+2. **Time Format**: YYYY/MM/DD HH:MM:SS or YYYY-MM-DD HH:MM:SS
+3. **Station Types**: 
+   - Button Pallet Position (Tube/Non-Tube)
+   - Pallet GR Position (Tube/Non-Tube)
+   - RMS A, RMS C
+   - Loading Dock, Scanning, Supermarket
+
+## Sample Data Rows
+
+```
+Fetch Station: "Button Pallet Position Tube"
+Deliver Station: "Pallet GR Position Tube"
+Start Time: "2024/01/15 08:30:00"
+Fetch Time: "2024/01/15 08:35:00"
+Delivery Time: "2024/01/15 08:42:00"
+```
+
+## Notes
+
+- The system specifically looks for "Pallet GR" entries in the data
+- Time calculations are performed between Start, Fetch, and Delivery times
+- Shift analysis is based on time buckets (Morning: 6-14, Afternoon: 14-22, Night: 22-6)
+- The processed output will include shift-wise aggregation and performance metrics 

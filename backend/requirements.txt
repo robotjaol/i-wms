@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+langchain
+chromadb
+faiss-cpu
+openai
+pandas
+python-multipart
+pydantic[dotenv]
+aiofiles
+sqlalchemy
+openpyxl 
