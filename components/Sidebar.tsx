@@ -35,10 +35,10 @@ const menuItems = [
 ];
 
 const systemItems = [
-  { id: 'inventory', label: 'Inventory', icon: Package, color: 'from-indigo-500 to-purple-500', description: 'Stock management' },
-  { id: 'logistics', label: 'Logistics', icon: Truck, color: 'from-teal-500 to-cyan-500', description: 'Supply chain tracking' },
-  { id: 'monitoring', label: 'Monitoring', icon: Activity, color: 'from-yellow-500 to-orange-500', description: 'Real-time monitoring' },
-  { id: 'database', label: 'Database', icon: Database, color: 'from-gray-500 to-slate-500', description: 'Data management' },
+  { id: 'inventory', label: 'Inventory', icon: Package, color: 'from-indigo-500 to-purple-500', description: 'Stock management', supervisor: false },
+  { id: 'logistics', label: 'Logistics', icon: Truck, color: 'from-teal-500 to-cyan-500', description: 'Supply chain tracking', supervisor: true },
+  { id: 'monitoring', label: 'Monitoring', icon: Activity, color: 'from-yellow-500 to-orange-500', description: 'Real-time monitoring', supervisor: true },
+  { id: 'database', label: 'Database', icon: Database, color: 'from-gray-500 to-slate-500', description: 'Data management', supervisor: true },
 ];
 
 export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarProps) {
@@ -199,10 +199,15 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                 System
               </h3>
               <div className="space-y-1">
-                {systemItems.map((item) => (
+                {systemItems.filter(item => !item.supervisor || session?.role === 'supervisor').map((item) => (
                   <motion.button
                     key={item.id}
-                    className="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group text-gray-700 hover:bg-gray-100 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                    onClick={() => handleTabChange(item.id)}
+                    className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
+                      activeTab === item.id
+                        ? 'bg-gradient-to-r ' + item.color + ' text-white shadow-lg'
+                        : 'text-gray-700 hover:bg-gray-100 hover:shadow-md'
+                    }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     aria-describedby={`${item.id}-description`}
@@ -223,7 +228,6 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                 ))}
               </div>
             </div>
-
             {/* Support Menu */}
             <div>
               <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-2">
@@ -231,7 +235,12 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
               </h3>
               <div className="space-y-1">
                 <motion.button
-                  className="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group text-gray-700 hover:bg-gray-100 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                  onClick={() => handleTabChange('help')}
+                  className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
+                    activeTab === 'help'
+                      ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg'
+                      : 'text-gray-700 hover:bg-gray-100 hover:shadow-md'
+                  }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -243,19 +252,26 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                     <span className="text-xs text-gray-500 block truncate">Get assistance</span>
                   </div>
                 </motion.button>
-                <motion.button
-                  className="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group text-gray-700 hover:bg-gray-100 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-r from-gray-500 to-slate-500 text-white">
-                    <Settings className="w-4 h-4" aria-hidden="true" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="font-medium block truncate">Settings</span>
-                    <span className="text-xs text-gray-500 block truncate">Configure system</span>
-                  </div>
-                </motion.button>
+                {session?.role === 'supervisor' && (
+                  <motion.button
+                    onClick={() => handleTabChange('settings')}
+                    className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
+                      activeTab === 'settings'
+                        ? 'bg-gradient-to-r from-gray-500 to-slate-500 text-white shadow-lg'
+                        : 'text-gray-700 hover:bg-gray-100 hover:shadow-md'
+                    }`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-r from-gray-500 to-slate-500 text-white">
+                      <Settings className="w-4 h-4" aria-hidden="true" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <span className="font-medium block truncate">Settings</span>
+                      <span className="text-xs text-gray-500 block truncate">Configure system</span>
+                    </div>
+                  </motion.button>
+                )}
               </div>
             </div>
           </nav>

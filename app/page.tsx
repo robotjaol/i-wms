@@ -25,6 +25,12 @@ import { Tooltip } from 'react-tooltip';
 import { useMediaQuery } from 'react-responsive';
 import { useSession } from '@/components/SessionContext';
 import { useRouter } from 'next/navigation';
+import Inventory from '../components/Inventory';
+import Logistics from '../components/Logistics';
+import Monitoring from '../components/Monitoring';
+import DatabasePanel from '../components/Database';
+import HelpSupport from '../components/HelpSupport';
+import SettingsPanel from '../components/Settings';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -151,6 +157,7 @@ export default function Home() {
         { id: 'excel', label: 'Excel Processor', icon: FileSpreadsheet },
         { id: 'ai', label: 'AI Assistant', icon: Bot },
         { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+        { key: 'settings', label: 'Settings', icon: Settings, component: <SettingsPanel />, supervisor: true },
       ];
 
   const renderContent = () => {
@@ -292,7 +299,7 @@ export default function Home() {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => tab.id && setActiveTab(tab.id as string)}
             className={`flex-1 flex flex-col items-center justify-center py-2 px-1 text-xs font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
               activeTab === tab.id
                 ? 'text-primary-600 border-t-2 border-primary-500 bg-blue-50'
