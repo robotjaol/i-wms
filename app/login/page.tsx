@@ -44,25 +44,25 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0a192f] via-[#1CAAD9]/30 to-[#f59e42]/10 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0a192f] via-[#1CAAD9]/30 to-[#f59e42]/10 relative overflow-hidden px-2 sm:px-0">
       {/* Decorative blurred gradients */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-tr from-blue-400/40 to-cyan-300/20 rounded-full blur-3xl z-0 animate-float" />
-      <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-gradient-to-br from-orange-300/30 to-yellow-200/20 rounded-full blur-2xl z-0 animate-float2" />
+      <div className="absolute -top-32 -left-32 w-72 sm:w-96 h-72 sm:h-96 bg-gradient-to-tr from-blue-400/40 to-cyan-300/20 rounded-full blur-3xl z-0 animate-float" />
+      <div className="absolute -bottom-24 -right-24 w-56 sm:w-80 h-56 sm:h-80 bg-gradient-to-br from-orange-300/30 to-yellow-200/20 rounded-full blur-2xl z-0 animate-float2" />
       <form
         onSubmit={handleLogin}
-        className={`relative z-10 w-full max-w-md bg-white/30 backdrop-blur-2xl rounded-3xl shadow-2xl p-10 flex flex-col gap-8 border border-white/40 glass-card ${shake ? 'animate-shake' : ''}`}
+        className={`relative z-10 w-full max-w-md bg-white/30 backdrop-blur-2xl rounded-3xl shadow-2xl p-6 sm:p-10 flex flex-col gap-6 sm:gap-8 border border-white/40 glass-card ${shake ? 'animate-shake' : ''}`}
         autoComplete="off"
       >
-        <div className="flex flex-col items-center gap-2 mb-2">
-          <Image src="/unilever-logo.svg" alt="Unilever Logo" width={56} height={56} className="drop-shadow-xl" />
+        <div className="flex flex-col items-center gap-2 mb-2 min-w-0">
+          <Image src="/unilever-logo.svg" alt="Unilever Logo" width={48} height={48} className="drop-shadow-xl w-12 h-12 sm:w-14 sm:h-14" />
           <span className="text-xs tracking-widest uppercase text-[#1CAAD9] bg-white/60 px-3 py-1 rounded-full mb-1 shadow">i-WMS Login</span>
-          <h2 className="text-3xl font-extrabold text-center text-[#1C1C2A] drop-shadow-lg">Welcome Back</h2>
-          <p className="text-sm text-gray-500 font-medium">Sign in to your intelligent warehouse</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-[#1C1C2A] drop-shadow-lg">Welcome Back</h2>
+          <p className="text-xs sm:text-sm text-gray-500 font-medium">Sign in to your intelligent warehouse</p>
         </div>
-        <div className="flex flex-col gap-2">
-          <label className="text-[#1CAAD9] font-semibold">Username</label>
+        <div className="flex flex-col gap-2 min-w-0">
+          <label className="text-[#1CAAD9] font-semibold text-sm sm:text-base">Username</label>
           <input
-            className={`px-4 py-2 rounded-xl bg-white/70 text-[#1C1C2A] border-2 focus:outline-none focus:border-[#1CAAD9] transition-all shadow-inner font-medium placeholder-gray-400 ${error ? 'border-red-400' : 'border-transparent'}`}
+            className={`px-3 sm:px-4 py-2 rounded-xl bg-white/70 text-[#1C1C2A] border-2 focus:outline-none focus:border-[#1CAAD9] transition-all shadow-inner font-medium placeholder-gray-400 text-sm sm:text-base ${error ? 'border-red-400' : 'border-transparent'}`}
             value={username}
             onChange={e => setUsername(e.target.value)}
             autoFocus
@@ -70,25 +70,25 @@ export default function Login() {
             disabled={loading}
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <label className="text-[#1CAAD9] font-semibold">Password</label>
+        <div className="flex flex-col gap-2 min-w-0">
+          <label className="text-[#1CAAD9] font-semibold text-sm sm:text-base">Password</label>
           <input
             type="password"
-            className={`px-4 py-2 rounded-xl bg-white/70 text-[#1C1C2A] border-2 focus:outline-none focus:border-[#1CAAD9] transition-all shadow-inner font-medium placeholder-gray-400 ${error ? 'border-red-400' : 'border-transparent'}`}
+            className={`px-3 sm:px-4 py-2 rounded-xl bg-white/70 text-[#1C1C2A] border-2 focus:outline-none focus:border-[#1CAAD9] transition-all shadow-inner font-medium placeholder-gray-400 text-sm sm:text-base ${error ? 'border-red-400' : 'border-transparent'}`}
             value={password}
             onChange={e => setPassword(e.target.value)}
             placeholder="Enter password"
             disabled={loading}
           />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <input type="checkbox" id="remember" className="accent-blue-400" disabled />
-          <label htmlFor="remember" className="text-gray-400 text-sm">Remember me (coming soon)</label>
+          <label htmlFor="remember" className="text-gray-400 text-xs sm:text-sm">Remember me (coming soon)</label>
         </div>
         {error && <div className="text-red-400 text-center font-semibold animate-fadeIn text-base">{error}</div>}
         <button
           type="submit"
-          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#1CAAD9] to-orange-400 text-white font-bold shadow-lg hover:scale-105 hover:shadow-xl transition-transform text-lg tracking-wide disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#1CAAD9] to-orange-400 text-white font-bold shadow-lg hover:scale-105 hover:shadow-xl transition-transform text-base sm:text-lg tracking-wide disabled:opacity-60 disabled:cursor-not-allowed"
           disabled={loading}
         >
           {loading ? (

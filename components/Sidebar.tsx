@@ -85,9 +85,10 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
     open: { opacity: 1 }
   };
 
+  // Determine visible main menu tabs based on role
   const visibleTabs = session?.role === 'supervisor'
     ? menuItems
-    : menuItems.filter(tab => tab.id === 'excel');
+    : menuItems.filter(tab => tab.id === 'excel' || tab.id === 'dashboard');
 
   return (
     <>
@@ -268,6 +269,10 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">System Status</p>
                 <p className="text-xs text-gray-600 truncate">All systems operational</p>
+              </div>
+              {/* Role indicator in sidebar footer */}
+              <div className="flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-medium ml-2">
+                {session?.role === 'supervisor' ? 'Supervisor' : 'User'}
               </div>
             </div>
           </div>
