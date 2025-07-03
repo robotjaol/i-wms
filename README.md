@@ -1,320 +1,292 @@
-# i-WMS - Intelligent Warehouse Management System
+# i-WMS – Intelligent Warehouse Management System
 
-A comprehensive warehouse management system built with Next.js, featuring AI-powered analytics, Excel processing, and real-time monitoring capabilities.
+A modern, AI-powered warehouse management platform with real-time analytics, Excel automation, and a beautiful, responsive UI.
 
-## 🚀 Features
+---
 
-### 1. Web Architecture & Frameworks
-- **Next.js 14** with App Router for optimal performance and SEO
-- **TypeScript** for type safety and better development experience
-- **Tailwind CSS** for atomic styling and responsive design
-- **Framer Motion** for smooth animations and transitions
-- **Serverless deployment** ready for Vercel
+## 🚀 At a Glance
 
-### 2. UI/UX Design & Animations
-- **Futuristic and professional** interface designed for warehouse operations
-- **High information density** with clean typography and intuitive navigation
-- **Fluid micro-animations** using Framer Motion
-- **Responsive design** optimized for all screen sizes
-- **Glass morphism effects** and modern visual elements
+- **Next.js 14** (App Router, TypeScript, Tailwind CSS)
+- **FastAPI** backend for Excel analytics
+- **AI Assistant** (LangChain.js, Gemini API)
+- **Interactive Dashboards** (Recharts)
+- **Elegant, glassmorphic UI**
 
-### 3. Excel Processing Logic
-- **FastAPI backend** integration for Excel file processing
-- **RMS algorithm** implementation for pallet movement analysis
-- **Shift-based performance** calculations and time-bucket aggregation
-- **Real-time file upload** with progress tracking
-- **Automated Excel report generation** with formulas and formatting
+---
 
-### 4. Statistical Visualization
-- **Recharts integration** for interactive data visualization
-- **Looker Studio-inspired** dashboards and charts
-- **Real-time KPI monitoring** with trend indicators
-- **Exportable reports** and data visualization
-- **Responsive chart layouts** with animated tooltips
+## 🏗️ System Architecture
 
-### 5. AI Integration
-- **LangChain.js** for AI-powered analytics
-- **Gemini API** integration for natural language processing
-- **Context-aware AI assistant** for warehouse queries
-- **Retrieval-augmented generation** capabilities
-- **Real-time AI insights** and recommendations
-
-### 6. Deployment & Operationalization
-- **Vercel deployment** with edge functions
-- **Environment variable management** for secure configuration
-- **API rate limiting** and error handling
-- **Logging and monitoring** capabilities
-- **Scalable architecture** for production use
-
-## 📁 Project Structure
-
-```
-i-wms/
-├── app/                          # Next.js App Router
-│   ├── api/                      # API routes
-│   │   └── analyze-excel/        # Excel processing endpoint
-│   ├── globals.css              # Global styles
-│   ├── layout.tsx               # Root layout
-│   └── page.tsx                 # Main dashboard
-├── components/                   # React components
-│   ├── Sidebar.tsx              # Navigation sidebar
-│   ├── Dashboard.tsx            # Main dashboard
-│   ├── ExcelProcessor.tsx       # Excel upload/processing
-│   ├── AIAssistant.tsx          # AI chat interface
-│   └── Analytics.tsx            # Advanced analytics
-├── reference/                    # Backend reference
-│   └── api_process.py           # FastAPI backend
-├── public/                       # Static assets
-├── package.json                  # Dependencies
-├── tailwind.config.js           # Tailwind configuration
-├── next.config.js               # Next.js configuration
-└── README.md                    # Project documentation
+```mermaid
+flowchart TD
+    A["User"] -->|"Login"| B["Next.js Frontend"]
+    B -->|"Excel Upload"| C["FastAPI Backend"]
+    C -->|"Process Excel"| D["Pandas, OpenPyXL, XlsxWriter"]
+    D -->|"Return Results"| B
+    B -->|"Show Dashboard, Analytics, AI Assistant"| E["UI Components"]
+    B -->|"AI Query"| F["LangChain.js / Gemini API"]
+    F -->|"AI Insights"| B
+    B -->|"Charts & KPIs"| G["Recharts"]
 ```
 
-## 🛠️ Technology Stack
+---
 
-### Frontend
-- **Next.js 14** - React framework with App Router
-- **TypeScript** - Type-safe JavaScript
-- **Tailwind CSS** - Utility-first CSS framework
-- **Framer Motion** - Animation library
-- **Recharts** - Chart library
-- **Lucide React** - Icon library
-- **React Dropzone** - File upload handling
-- **React Hot Toast** - Toast notifications
+## 🖥️ Component Overview
 
-### Backend Integration
-- **FastAPI** - Python backend for Excel processing
-- **Pandas** - Data manipulation and analysis
-- **OpenPyXL** - Excel file handling
-- **XlsxWriter** - Excel report generation
-
-### AI & Analytics
-- **LangChain.js** - AI framework
-- **Google Gemini API** - Large language model
-- **ChromaDB** - Vector database (optional)
-- **Axios** - HTTP client
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+ 
-- Python 3.8+ (for FastAPI backend)
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd i-wms
-   ```
-
-2. **Install frontend dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Install backend dependencies**
-   ```bash
-   cd reference
-   pip install fastapi uvicorn pandas openpyxl xlsxwriter
-   ```
-
-4. **Set up environment variables**
-   ```bash
-   # Create .env.local file
-   cp .env.example .env.local
-   ```
-   
-   Add your environment variables:
-   ```env
-   FASTAPI_URL=http://localhost:8000
-   GEMINI_API_KEY=your_gemini_api_key
-   ```
-
-5. **Start the FastAPI backend**
-   ```bash
-   cd reference
-   python api_process.py
-   ```
-
-6. **Start the Next.js development server**
-   ```bash
-   npm run dev
-   ```
-
-7. **Open your browser**
-   Navigate to `http://localhost:3000`
-
-## 📊 Features Overview
-
-### Dashboard
-- **Real-time KPI monitoring** with trend indicators
-- **Interactive charts** for performance visualization
-- **System status** and alert monitoring
-- **Quick action buttons** for common tasks
-
-### Excel Processor
-- **Drag & drop file upload** with validation
-- **Real-time processing status** with progress tracking
-- **RMS algorithm integration** for pallet analysis
-- **Automated report generation** with Excel formulas
-- **Download processed files** with custom naming
-
-### AI Assistant
-- **Natural language queries** for warehouse data
-- **Context-aware responses** based on system data
-- **Quick query templates** for common questions
-- **Real-time chat interface** with typing indicators
-- **AI-powered insights** and recommendations
-
-### Analytics
-- **Advanced data visualization** with multiple chart types
-- **Time-based filtering** and date range selection
-- **Equipment status monitoring** with real-time updates
-- **Performance trend analysis** with historical data
-- **Export capabilities** for reports and data
-
-## 🔧 Configuration
-
-### Environment Variables
-```env
-# Backend Configuration
-FASTAPI_URL=http://localhost:8000
-
-# AI Configuration
-GEMINI_API_KEY=your_gemini_api_key
-LANGCHAIN_API_KEY=your_langchain_key
-
-# Database (Optional)
-CHROMA_DB_PATH=./chroma_db
-
-# Deployment
-NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
+```mermaid
+graph LR
+    subgraph Frontend
+        A1["Login Page"]
+        A2["Dashboard"]
+        A3["Excel Processor"]
+        A4["AI Assistant"]
+        A5["Analytics"]
+        A6["Sidebar & Navigation"]
+    end
+    subgraph Backend
+        B1["FastAPI Server"]
+        B2["Excel Analyzer (Pandas, OpenPyXL)"]
+        B3["AI Engine (LangChain.js, Gemini API)"]
+        B4["Vector Store (ChromaDB)"]
+    end
+    subgraph Data
+        C1["Excel Files"]
+        C2["Processed Reports"]
+        C3["AI Knowledge Base"]
+    end
+    A1 -->|"User Auth"| A2
+    A2 -->|"Upload Excel"| A3
+    A3 -->|"POST /analyze-excel"| B1
+    B1 -->|"Analyze"| B2
+    B2 -->|"Save/Return"| C2
+    A3 -->|"Show Results"| A2
+    A4 -->|"Query"| B3
+    B3 -->|"Retrieve"| B4
+    B4 -->|"Vector Search"| C3
+    B3 -->|"AI Response"| A4
+    A5 -->|"Charts"| A2
+    A6 -->|"Navigate"| A1
+    A6 -->|"Navigate"| A2
+    A6 -->|"Navigate"| A3
+    A6 -->|"Navigate"| A4
+    A6 -->|"Navigate"| A5
 ```
 
-### Tailwind Configuration
-The project uses a custom Tailwind configuration with:
-- **Custom color palette** for warehouse themes
-- **Custom animations** for smooth transitions
-- **Responsive breakpoints** for all devices
-- **Custom utilities** for common patterns
+---
 
-### API Configuration
-- **CORS handling** for cross-origin requests
-- **Rate limiting** to prevent abuse
-- **Error handling** with detailed logging
-- **File upload limits** and validation
+## 📊 System Component Distribution
 
-## 🚀 Deployment
+```mermaid
+pie
+    title "System Component Distribution"
+    "Frontend (Next.js, UI)" : 30
+    "Backend (FastAPI, Python)" : 30
+    "AI & Analytics" : 20
+    "Excel Processing" : 15
+    "DevOps & Deployment" : 5
+```
 
-### Vercel Deployment
-1. **Connect your repository** to Vercel
-2. **Set environment variables** in Vercel dashboard
-3. **Deploy automatically** on git push
-4. **Configure custom domain** (optional)
+---
 
-### Backend Deployment
-The FastAPI backend can be deployed to:
-- **Fly.io** - Simple container deployment
-- **Railway** - Easy Python deployment
-- **AWS Lambda** - Serverless functions
-- **Docker** - Containerized deployment
+## 🔄 Workflow Overview
 
-## 📈 Performance Optimization
+```mermaid
+flowchart TD
+    subgraph "Frontend Workflow"
+        A["User Login"] --> B["Session Context"]
+        B --> C["Dashboard"]
+        C --> D["Tab Navigation"]
+        D --> E1["Excel Processor"]
+        D --> E2["AI Assistant"]
+        D --> E3["Analytics"]
+    end
+    subgraph "Backend Workflow"
+        F["Excel Upload"] --> G["FastAPI Endpoint"]
+        G --> H["Excel Analyzer"]
+        H --> I["Processed Data"]
+        I --> J["Return to Frontend"]
+    end
+    E1 --> F
+    E2 --> K["AI Query"]
+    K --> L["LangChain.js / Gemini API"]
+    L --> M["AI Response"]
+    M --> E2
+    E3 --> N["Fetch Analytics Data"]
+    N --> O["Backend API"]
+    O --> P["Return Analytics"]
+    P --> E3
+```
 
-### Frontend
-- **Code splitting** with dynamic imports
-- **Image optimization** with Next.js Image component
-- **Bundle analysis** and optimization
-- **Lazy loading** for non-critical components
+---
 
-### Backend
-- **Async processing** for large files
-- **Caching strategies** for repeated queries
-- **Database optimization** for large datasets
-- **Memory management** for Excel processing
+## 📥 Excel Processing Pipeline
 
-## 🔒 Security
+```mermaid
+flowchart TD
+    subgraph "Excel Processing"
+        A["User Uploads Excel"] --> B["POST /api/analyze-excel"]
+        B --> C["FastAPI Receives File"]
+        C --> D["Pandas/OpenPyXL Process"]
+        D --> E["RMS Algorithm"]
+        E --> F["Generate Report"]
+        F --> G["Return Processed File"]
+        G --> H["Frontend Shows Result"]
+    end
+```
 
-### Frontend Security
-- **Input validation** and sanitization
-- **CSRF protection** with Next.js
-- **Content Security Policy** headers
-- **Secure file upload** validation
+---
 
-### Backend Security
-- **API key management** for external services
-- **File type validation** for uploads
-- **Rate limiting** to prevent abuse
-- **Error handling** without sensitive data exposure
+## 🤖 AI Assistant Query Flow
 
-## 🤝 Contributing
+```mermaid
+flowchart TD
+    subgraph "AI Assistant"
+        A["User Query"] --> B["Frontend Sends to API"]
+        B --> C["LangChain.js"]
+        C --> D["Gemini API"]
+        D --> E["AI Response"]
+        E --> F["Frontend Displays Answer"]
+    end
+```
 
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
-3. **Commit your changes** (`git commit -m 'Add amazing feature'`)
-4. **Push to the branch** (`git push origin feature/amazing-feature`)
-5. **Open a Pull Request**
+---
+
+## 📈 Analytics Data Flow
+
+```mermaid
+flowchart TD
+    subgraph "Analytics"
+        A["Frontend Requests Data"] --> B["Backend API"]
+        B --> C["Fetch from DB/Excel"]
+        C --> D["Return Analytics Data"]
+        D --> E["Frontend Renders Charts"]
+    end
+```
+
+---
+
+## 🧩 Full System Process (Sequence Diagram)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend as Next.js App
+    participant API as FastAPI Backend
+    participant Excel as Excel Analyzer (Pandas, OpenPyXL)
+    participant AI as AI Engine (LangChain.js, Gemini API)
+    participant DB as Vector Store / Data
+
+    User->>Frontend: Open App (Login)
+    Frontend->>User: Show Login UI
+    User->>Frontend: Submit Credentials
+    Frontend->>Frontend: Validate/Login (Session)
+    Frontend->>User: Show Dashboard (Sidebar, Tabs)
+    User->>Frontend: Upload Excel File
+    Frontend->>API: POST /api/analyze-excel (file)
+    API->>Excel: Process Excel (RMS, Analysis)
+    Excel-->>API: Return Results/Report
+    API-->>Frontend: Send Processed Data
+    Frontend->>User: Show Results, Download Link
+    User->>Frontend: Ask AI Question
+    Frontend->>AI: Send Query (LangChain.js, Gemini API)
+    AI->>DB: Retrieve Context (Vector Search)
+    DB-->>AI: Return Context
+    AI-->>Frontend: AI Response
+    Frontend->>User: Show AI Answer
+    User->>Frontend: View Analytics Tab
+    Frontend->>API: Request Analytics Data
+    API->>Excel: Fetch/Compute Analytics
+    Excel-->>API: Return Analytics
+    API-->>Frontend: Send Analytics Data
+    Frontend->>User: Render Charts, KPIs
+```
+
+---
+
+## ⚡ Quickstart (CLI)
+
+```mermaid
+flowchart TD
+    subgraph "How to Run (CLI Commands)"
+        A["Clone Repo"] --> B["Install Frontend Deps"]
+        B --> C["Install Backend Deps"]
+        C --> D["Set Env Vars"]
+        D --> E["Start Backend"]
+        E --> F["Start Frontend"]
+        F --> G["Open in Browser"]
+    end
+```
+
+### 1. Clone & Install
+```bash
+# Clone repository
+$ git clone <repository-url>
+$ cd i-wms
+
+# Install frontend dependencies
+$ npm install
+
+# Install backend dependencies
+$ cd reference
+$ pip install -r requirements.txt
+```
+
+### 2. Configure Environment
+```bash
+# Copy and edit environment variables
+$ cp .env.example .env.local
+# Edit .env.local with your API keys and backend URL
+```
+
+### 3. Run Backend
+```bash
+$ cd reference
+$ python api_process.py
+```
+
+### 4. Run Frontend
+```bash
+$ cd ..
+$ npm run dev
+```
+
+### 5. Open in Browser
+Go to: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## ✨ Features
+
+- **Login & Auth**: Secure, role-based access
+- **Dashboard**: Real-time KPIs, charts, and system status
+- **Excel Processor**: Drag & drop upload, RMS analysis, instant report download
+- **AI Assistant**: Natural language queries, context-aware insights
+- **Analytics**: Advanced charts, time filtering, exportable reports
+- **Modern UI**: Sidebar, tab navigation, notifications, glassmorphism
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS, Framer Motion, Recharts
+- **Backend**: FastAPI, Python, Pandas, OpenPyXL, XlsxWriter
+- **AI**: LangChain.js, Gemini API, ChromaDB (optional)
+- **DevOps**: Vercel, Docker, Railway, Fly.io
+
+---
+
+## 🧭 Project Structure
+
+- `app/` – Next.js App Router (pages, layout, API)
+- `components/` – UI components (Sidebar, Dashboard, etc.)
+- `backend/` & `reference/` – FastAPI backend, Excel logic
+- `public/` – Static assets (logo, favicon)
+- `lib/` – Utility libraries (AI, Excel, vectorization)
+
+---
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support and questions:
-- **Documentation**: Check this README and inline code comments
-- **Issues**: Create an issue in the repository
-- **Discussions**: Use GitHub Discussions for questions
-
-## 🔄 Version History
-
-### v2.0.0 (Current)
-- Complete UI redesign with modern components
-- AI assistant integration with LangChain
-- Advanced analytics with Recharts
-- Excel processing with FastAPI backend
-- Real-time dashboard with live data
-
-### v1.0.0
-- Initial release with basic functionality
-- Excel upload and processing
-- Simple dashboard interface
-
-## 📊 System Requirements
-
-### Minimum Requirements
-- **Node.js**: 18.0.0+
-- **npm**: 8.0.0+
-- **Python**: 3.8+
-- **RAM**: 4GB+
-- **Storage**: 2GB+
-
-### Recommended Requirements
-- **Node.js**: 20.0.0+
-- **npm**: 10.0.0+
-- **Python**: 3.11+
-- **RAM**: 8GB+
-- **Storage**: 5GB+
-
-## 🎯 Roadmap
-
-### Upcoming Features
-- [ ] **Real-time notifications** with WebSocket
-- [ ] **Mobile app** with React Native
-- [ ] **Advanced AI models** integration
-- [ ] **Multi-warehouse support**
-- [ ] **Advanced reporting** with custom templates
-- [ ] **Integration APIs** for third-party systems
-
-### Planned Improvements
-- [ ] **Performance optimization** for large datasets
-- [ ] **Enhanced security** features
-- [ ] **Better error handling** and recovery
-- [ ] **Comprehensive testing** suite
-- [ ] **Documentation improvements**
+MIT License. See [LICENSE](LICENSE).
 
 ---
 
