@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
+import { SessionProvider } from '@/components/SessionContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,12 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/unilever-logo.ico" sizes="any" />
+        <link rel="icon" href="/unilever-logo.svg" type="image/svg+xml" />
+        <link rel="icon" href="/unilever-logo.png" type="image/png" />
       </head>
       <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-          {children}
-        </div>
+        <SessionProvider>
+          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+            {children}
+          </div>
+        </SessionProvider>
         <Toaster
           position="top-right"
           toastOptions={{

@@ -13,7 +13,10 @@
  * - Adjust payload for your backend's expected format
  * - Handle file uploads if your backend supports it
  */
-export async function queryAI({ message, files }: { message: string; files?: File[] }): Promise<string> {
+export async function queryAI(
+  { message, files }: { message: string; files?: File[] },
+  extraHeaders: Record<string, string> = {}
+): Promise<string> {
   const BACKEND_URL = process.env.NEXT_PUBLIC_AI_BACKEND_URL || 'http://localhost:8000/api/query';
   const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
   const formData = new FormData();
@@ -29,6 +32,7 @@ export async function queryAI({ message, files }: { message: string; files?: Fil
       body: formData,
       headers: {
         'Authorization': `Bearer ${API_KEY}`,
+        ...extraHeaders,
       },
     });
     if (!res.ok) {

@@ -9,15 +9,16 @@ from reference.api_process import Worker
 import tempfile
 import shutil
 import numpy as np
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 from typing import Optional
 import logging
 from sqlalchemy.exc import IntegrityError
+import json
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./sheet4_records.db")
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
@@ -236,12 +237,95 @@ async def vectorize_endpoint(file: UploadFile = File(...), doc_type: str = Form(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Helper: summarize records for LLM context
+def summarize_records(records):
+    if not records:
+        return json.dumps({"error": "No data available"})
+    # Example: summarize by date, shift, area, etc.
+    summary = {}
+    # Group by date
+    daily = {}
+    for r in records:
+        date = r.Start_Time.date().isoformat() if r.Start_Time else 'unknown'
+        shift = None
+        hour = r.Start_Time.hour if r.Start_Time else None
+        area = r.Fetch_Station or 'unknown'
+        # Example shift logic (customize as needed)
+        if hour is not None:
+            if 6 <= hour < 14:
+                shift = 'shift_1'
+            elif 14 <= hour < 22:
+                shift = 'shift_2'
+            else:
+                shift = 'shift_3'
+        else:
+            shift = 'unknown'
+        if date not in daily:
+            daily[date] = {
+                'total_pallets': 0,
+                'shift_summary': {'shift_1': 0, 'shift_2': 0, 'shift_3': 0},
+                'distribution': {},
+            }
+        daily[date]['total_pallets'] += 1
+        daily[date]['shift_summary'][shift] += 1
+        if area not in daily[date]['distribution']:
+            daily[date]['distribution'][area] = 0
+        daily[date]['distribution'][area] += 1
+    # Top area, peak hour, etc. (for latest date)
+    latest_date = max(daily.keys())
+    latest = daily[latest_date]
+    top_area = max(latest['distribution'], key=latest['distribution'].get)
+    # Find peak hour (across all records)
+    hour_counts = {}
+    for r in records:
+        if r.Start_Time:
+            h = r.Start_Time.strftime('%H:00')
+            hour_counts[h] = hour_counts.get(h, 0) + 1
+    peak_hour = max(list(hour_counts.keys()), key=hour_counts.get) if hour_counts else None
+    # Top 5 routes by pallet volume
+    route_counts = {}
+    for r in records:
+        route = f"{r.Fetch_Station} -> {r.Deliver_Station}"
+        route_counts[route] = route_counts.get(route, 0) + 1
+    top_routes = sorted(route_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+    summary = {
+        "date": latest_date,
+        "total_pallets": latest['total_pallets'],
+        "top_area": top_area,
+        "peak_hour": peak_hour,
+        "shift_summary": latest['shift_summary'],
+        "distribution": latest['distribution'],
+        "top_5_routes_by_pallet_volume": [{"route": r, "count": c} for r, c in top_routes],
+        "daily_summary": daily,
+    }
+    return json.dumps(summary, indent=2)
+
 @app.post("/api/query")
-async def query_endpoint(query: str = Form(...), context_id: str = Form(None), authorization: str = Depends(verify_token)):
-    try:
-        return await query_rag(query, context_id)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+async def query_endpoint(query: str = Form(...), context_id: str = Form(None), supervisor_mode: str = Header(None)):
+    # Access control: only allow if supervisor_mode is 'true'
+    if supervisor_mode != 'true':
+        return {"error": "Access denied. Only Supervisor mode can query the AI."}
+    # Fetch all records (optionally filter by last 30 days)
+    session = SessionLocal()
+    thirty_days_ago = datetime.now() - timedelta(days=30)
+    records = session.query(Sheet4Record).filter(Sheet4Record.Start_Time >= thirty_days_ago).all()
+    session.close()
+    context = summarize_records(records)
+    explanation = "This answer is based on the summarized warehouse activity data from the last 30 days. The context JSON contains daily, shift, area, and route breakdowns. If you need to see the exact data used, ask: 'how did you get this value?'"
+    # If question is not about warehouse data, fallback
+    if not any(word in query.lower() for word in ["pallet", "shift", "area", "agv", "cycle", "station", "fetch", "deliver", "batch", "quantity", "summary", "compare", "today", "yesterday", "route", "performance", "stock", "data"]):
+        return {
+            "answer": "I'm currently connected to your warehouse activity data. Please rephrase your question to refer to a metric, date, location, or shift.",
+            "context_json": context,
+            "explanation": explanation
+        }
+    # Pass context to LLM
+    ai_answer = await query_rag(query, context)
+    return {
+        "answer": ai_answer,
+        "context_json": context,
+        "explanation": explanation
+    }
 
 @app.post("/api/analytics")
 async def analytics_endpoint(authorization: str = Depends(verify_token)):

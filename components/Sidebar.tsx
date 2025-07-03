@@ -18,6 +18,7 @@ import {
   Menu
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useSession } from './SessionContext';
 
 interface SidebarProps {
   activeTab: string;
@@ -42,6 +43,7 @@ const systemItems = [
 
 export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const { session } = useSession();
 
   useEffect(() => {
     const checkMobile = () => {
@@ -83,18 +85,22 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
     open: { opacity: 1 }
   };
 
+  const visibleTabs = session?.role === 'supervisor'
+    ? menuItems
+    : menuItems.filter(tab => tab.id === 'excel');
+
   return (
     <>
-      {/* Mobile overlay */}
+      {/* Overlay for all devices */}
       <AnimatePresence>
-        {isOpen && isMobile && (
+        {isOpen && (
           <motion.div
             initial="closed"
             animate="open"
             exit="closed"
             variants={overlayVariants}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
             onClick={onClose}
             aria-hidden="true"
           />
@@ -115,9 +121,10 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
         className={`fixed lg:relative lg:translate-x-0 z-50 h-full w-80 max-w-[85vw] lg:max-w-none bg-white/95 backdrop-blur-xl border-r border-gray-200 shadow-xl lg:shadow-lg`}
         role="navigation"
         aria-label="Main navigation"
+        style={{ left: 0, top: 0 }}
       >
         <div className="flex flex-col h-full">
-          {/* Header with close button for mobile */}
+          {/* Header with close button for all devices */}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -129,15 +136,14 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                   <p className="text-xs text-gray-500">v2.0.0</p>
                 </div>
               </div>
-              {isMobile && (
-                <button
-                  onClick={onClose}
-                  className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  aria-label="Close navigation"
-                >
-                  <X className="w-5 h-5 text-gray-600" />
-                </button>
-              )}
+              {/* Hamburger button in sidebar header */}
+              <button
+                onClick={onClose}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+                aria-label="Close navigation"
+              >
+                <Menu className="w-6 h-6 text-primary-500" />
+              </button>
             </div>
           </div>
 
@@ -149,7 +155,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                 Main Menu
               </h3>
               <div className="space-y-1">
-                {menuItems.map((item) => (
+                {visibleTabs.map((item) => (
                   <motion.button
                     key={item.id}
                     onClick={() => handleTabChange(item.id)}

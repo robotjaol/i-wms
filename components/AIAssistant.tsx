@@ -48,6 +48,7 @@ export default function AIAssistant() {
   const [showQuickPrompts, setShowQuickPrompts] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [isSupervisor, setIsSupervisor] = useState(true);
 
   const quickPrompts: QuickPrompt[] = [
     {
@@ -95,12 +96,17 @@ export default function AIAssistant() {
     }
   }, [inputValue]);
 
+  useEffect(() => {
+    // Read supervisor mode from localStorage (or context if available)
+    setIsSupervisor(localStorage.getItem('supervisorMode') === 'true');
+  }, []);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleSendMessage = async (content: string) => {
-    if (!content.trim() || isLoading) return;
+    if (!content.trim() || isLoading || !isSupervisor) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -115,9 +121,8 @@ export default function AIAssistant() {
     setIsTyping(true);
 
     try {
-      // --- Real AI backend integration ---
-      // Optionally pass files if you support RAG/vector search with uploads
-      const aiResponse = await queryAI({ message: content.trim() });
+      // Pass supervisor_mode header
+      const aiResponse = await queryAI({ message: content.trim() }, { supervisor_mode: isSupervisor ? 'true' : 'false' });
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
@@ -347,6 +352,12 @@ export default function AIAssistant() {
 
       {/* Input Area */}
       <div className="p-4 sm:p-6 border-t border-gray-200 bg-white/80 backdrop-blur-sm">
+        {!isSupervisor && (
+          <div className="mb-3 p-3 rounded-xl bg-yellow-50 border border-yellow-200 text-yellow-800 font-semibold flex items-center gap-2 animate-fade-in">
+            <AlertCircle className="w-5 h-5 text-yellow-500" />
+            Only Supervisors can use the AI Assistant. Switch to Supervisor Mode to ask questions.
+          </div>
+        )}
         <div className="flex items-end space-x-3">
           <div className="flex-1 relative">
             <textarea
@@ -359,11 +370,11 @@ export default function AIAssistant() {
                   handleSendMessage(inputValue);
                 }
               }}
-              placeholder=""
+              placeholder={isSupervisor ? "Ask about your warehouse data..." : "Supervisor access required"}
               className="w-full resize-none border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent placeholder-gray-500 text-sm text-black"
               rows={1}
               maxLength={1000}
-              disabled={isLoading}
+              disabled={isLoading || !isSupervisor}
             />
             <div className="absolute bottom-2 right-2 text-xs text-gray-400">
               {inputValue.length}/1000
@@ -372,7 +383,7 @@ export default function AIAssistant() {
           
           <button
             onClick={() => handleSendMessage(inputValue)}
-            disabled={!inputValue.trim() || isLoading}
+            disabled={!inputValue.trim() || isLoading || !isSupervisor}
             className="p-3 bg-gradient-to-r from-primary-500 to-accent-500 text-white rounded-xl hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Send message"
           >
