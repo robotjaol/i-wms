@@ -127,7 +127,7 @@ export default function Settings() {
   const renderToggleSwitch = (key: string, label: string, description?: string, icon?: any) => (
     <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
       <div className="flex items-center gap-3">
-        {icon && <icon className="w-5 h-5 text-gray-500" />}
+        {icon && React.createElement(icon, { className: "w-5 h-5 text-gray-500" })}
         <div>
           <div className="font-medium text-gray-900">{label}</div>
           {description && <div className="text-sm text-gray-600">{description}</div>}
@@ -154,7 +154,7 @@ export default function Settings() {
   const renderSelectSetting = (key: string, label: string, options: { value: string; label: string }[], icon?: any) => (
     <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
       <div className="flex items-center gap-3">
-        {icon && <icon className="w-5 h-5 text-gray-500" />}
+        {icon && React.createElement(icon, { className: "w-5 h-5 text-gray-500" })}
         <div className="font-medium text-gray-900">{label}</div>
       </div>
       <select
@@ -174,7 +174,7 @@ export default function Settings() {
   const renderNumberSetting = (key: string, label: string, min: number, max: number, step: number, unit: string, icon?: any) => (
     <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
       <div className="flex items-center gap-3">
-        {icon && <icon className="w-5 h-5 text-gray-500" />}
+        {icon && React.createElement(icon, { className: "w-5 h-5 text-gray-500" })}
         <div className="font-medium text-gray-900">{label}</div>
       </div>
       <div className="flex items-center gap-2">
