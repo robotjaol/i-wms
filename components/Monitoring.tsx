@@ -113,15 +113,15 @@ export default function Monitoring() {
       </div>
       <div className="grid grid-cols-2 gap-2 text-xs">
         <div>
-          <span className="text-gray-600">AGVs:</span>
+          <span className="text-black">AGVs:</span>
           <span className="font-semibold ml-1">{section.agvCount}</span>
         </div>
         <div>
-          <span className="text-gray-600">Pallets:</span>
+          <span className="text-black">Pallets:</span>
           <span className="font-semibold ml-1">{section.palletCount}</span>
         </div>
       </div>
-      <div className="text-xs text-gray-500 mt-1">{section.lastActivity}</div>
+      <div className="text-xs text-black mt-1">{section.lastActivity}</div>
     </motion.div>
   );
 
@@ -141,7 +141,7 @@ export default function Monitoring() {
               <TrendingUp className="absolute -top-2 -right-2 w-3 h-3 text-red-500 rotate-180" />
             )}
           </div>
-          <span className="text-xs text-gray-600">{zone.zone}</span>
+          <span className="text-xs text-black">{zone.zone}</span>
           <span className="text-xs font-semibold">{zone.frequency}/hr</span>
         </div>
       ))}
@@ -163,13 +163,13 @@ export default function Monitoring() {
               health.status === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
             }`} />
           </div>
-          <div className="text-xs text-gray-600">
+          <div className="text-xs text-black">
             {key === 'backend' && `${health.responseTime}`}
             {key === 'database' && `${health.connections} connections`}
             {key === 'agvNetwork' && `${health.connected}/${health.total} AGVs`}
             {key === 'sensors' && `${health.active}/${health.total} active`}
           </div>
-          <div className="text-xs text-gray-500 mt-1">{health.lastCheck}</div>
+          <div className="text-xs text-black mt-1">{health.lastCheck}</div>
         </div>
       ))}
     </div>
@@ -334,7 +334,7 @@ export default function Monitoring() {
                     {log.type}
                   </span>
                   <span className="text-xs text-gray-500 font-mono">{log.agvId}</span>
-                  <span className="text-gray-700 flex-1">{log.desc}</span>
+                  <span className="text-black flex-1">{log.desc}</span>
                   <div className={`w-2 h-2 rounded-full ${
                     log.level === 'error' ? 'bg-red-500' :
                     log.level === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'

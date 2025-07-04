@@ -271,7 +271,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                   </motion.div>
                   <div className="flex-1 min-w-0">
                     <span className="font-medium block truncate">Help & Support</span>
-                    <span className="text-xs text-white">Get assistance</span>
+                    <span className={`text-xs block truncate ${activeTab === 'help' ? 'text-white' : 'text-gray-500'}`}>Get assistance</span>
                   </div>
                 </motion.button>
                 {session?.role === 'supervisor' && (
@@ -297,7 +297,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                     </motion.div>
                     <div className="flex-1 min-w-0">
                       <span className="font-medium block truncate">Settings</span>
-                      <span className="text-xs text-white">Configure system</span>
+                      <span className={`text-xs block truncate ${activeTab === 'settings' ? 'text-white' : 'text-gray-500'}`}>Configure system</span>
                     </div>
                   </motion.button>
                 )}

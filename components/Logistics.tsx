@@ -185,8 +185,8 @@ export default function Logistics() {
             }}
           >
             <span className="text-xs font-semibold text-center">{item.station}</span>
-            <span className="text-xs text-gray-600">{item.delay}m delay</span>
-            <span className="text-xs text-gray-500">{item.frequency}/hr</span>
+            <span className="text-xs text-black">{item.delay}m delay</span>
+            <span className="text-xs text-black">{item.frequency}/hr</span>
           </div>
         ))}
       </div>
