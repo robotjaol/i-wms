@@ -41,6 +41,16 @@ const systemItems = [
   { id: 'database', label: 'Database', icon: Database, color: 'from-gray-500 to-slate-500', description: 'Data management', supervisor: true },
 ];
 
+// Define a mapping from tab id to gradient color classes
+const tabGradients = {
+  inventory: 'from-indigo-500 to-purple-500',
+  logistics: 'from-teal-500 to-cyan-500',
+  monitoring: 'from-yellow-500 to-orange-500',
+  database: 'from-gray-500 to-slate-500',
+  help: 'from-blue-500 to-indigo-500',
+  settings: 'from-gray-500 to-slate-500',
+};
+
 export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarProps) {
   const [isMobile, setIsMobile] = useState(false);
   const { session } = useSession();
@@ -129,9 +139,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <Package className="w-7 h-7 text-white" aria-hidden="true" />
-                </div>
+                <img src="/unilever-logo.svg" alt="Unilever Logo" className="w-12 h-12 rounded-xl shadow-lg" />
                 <div>
                   <h2 className="text-xl font-bold text-gray-900">i-WMS</h2>
                   <p className="text-xs text-gray-500">v2.0.0</p>
@@ -212,14 +220,21 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                     whileTap={{ scale: 0.98 }}
                     aria-describedby={`${item.id}-description`}
                   >
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-r ${item.color} text-white`}>
+                    <motion.div
+                      key={item.id + (activeTab === item.id ? '-active' : '')}
+                      initial={{ scale: 0.8, rotate: -10, opacity: 0 }}
+                      animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                      exit={{ scale: 0.8, rotate: 10, opacity: 0 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-r ${tabGradients[item.id] || 'from-primary-500 to-accent-500'} text-white`}
+                    >
                       <item.icon className="w-4 h-4" aria-hidden="true" />
-                    </div>
+                    </motion.div>
                     <div className="flex-1 min-w-0">
                       <span className="font-medium block truncate">{item.label}</span>
                       <span 
                         id={`${item.id}-description`}
-                        className="text-xs text-gray-500 block truncate"
+                        className={`text-xs block truncate ${activeTab === item.id ? 'text-white' : 'text-gray-500'}`}
                       >
                         {item.description}
                       </span>
@@ -244,12 +259,19 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
+                  <motion.div
+                    key="help"
+                    initial={{ scale: 0.8, rotate: -10, opacity: 0 }}
+                    animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                    exit={{ scale: 0.8, rotate: 10, opacity: 0 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-r ${tabGradients.help} text-white`}
+                  >
                     <HelpCircle className="w-4 h-4" aria-hidden="true" />
-                  </div>
+                  </motion.div>
                   <div className="flex-1 min-w-0">
                     <span className="font-medium block truncate">Help & Support</span>
-                    <span className="text-xs text-gray-500 block truncate">Get assistance</span>
+                    <span className="text-xs text-white">Get assistance</span>
                   </div>
                 </motion.button>
                 {session?.role === 'supervisor' && (
@@ -263,12 +285,19 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: Si
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-r from-gray-500 to-slate-500 text-white">
+                    <motion.div
+                      key="settings"
+                      initial={{ scale: 0.8, rotate: -10, opacity: 0 }}
+                      animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                      exit={{ scale: 0.8, rotate: 10, opacity: 0 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-r ${tabGradients.settings} text-white`}
+                    >
                       <Settings className="w-4 h-4" aria-hidden="true" />
-                    </div>
+                    </motion.div>
                     <div className="flex-1 min-w-0">
                       <span className="font-medium block truncate">Settings</span>
-                      <span className="text-xs text-gray-500 block truncate">Configure system</span>
+                      <span className="text-xs text-white">Configure system</span>
                     </div>
                   </motion.button>
                 )}

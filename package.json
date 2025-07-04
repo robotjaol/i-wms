@@ -22,6 +22,7 @@
     "chromadb": "^1.7.3",
     "clsx": "^2.0.0",
     "date-fns": "^4.1.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^10.18.0",
     "langchain": "^0.0.208",
     "lucide-react": "^0.294.0",
@@ -44,4 +45,3 @@
     "eslint-config-next": "14.0.4"
   }
 }
- 

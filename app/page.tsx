@@ -14,7 +14,10 @@ import {
   Menu,
   X,
   Bell,
-  Search
+  Search,
+  Activity,
+  Database,
+  HelpCircle
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import Dashboard from '@/components/Dashboard';
@@ -31,6 +34,7 @@ import Monitoring from '../components/Monitoring';
 import DatabasePanel from '../components/Database';
 import HelpSupport from '../components/HelpSupport';
 import SettingsPanel from '../components/Settings';
+import Image from 'next/image';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -157,7 +161,12 @@ export default function Home() {
         { id: 'excel', label: 'Excel Processor', icon: FileSpreadsheet },
         { id: 'ai', label: 'AI Assistant', icon: Bot },
         { id: 'analytics', label: 'Analytics', icon: TrendingUp },
-        { key: 'settings', label: 'Settings', icon: Settings, component: <SettingsPanel />, supervisor: true },
+        { id: 'inventory', label: 'Inventory', icon: Package },
+        { id: 'logistics', label: 'Logistics', icon: Truck },
+        { id: 'monitoring', label: 'Monitoring', icon: Activity },
+        { id: 'database', label: 'Database', icon: Database },
+        { id: 'help', label: 'Help & Support', icon: HelpCircle },
+        { id: 'settings', label: 'Settings', icon: Settings },
       ];
 
   const renderContent = () => {
@@ -170,6 +179,18 @@ export default function Home() {
         return session?.role === 'supervisor' ? <AIAssistant /> : <Dashboard />;
       case 'analytics':
         return session?.role === 'supervisor' ? <Analytics /> : <Dashboard />;
+      case 'inventory':
+        return <Inventory />;
+      case 'logistics':
+        return <Logistics />;
+      case 'monitoring':
+        return <Monitoring />;
+      case 'database':
+        return <DatabasePanel />;
+      case 'help':
+        return <HelpSupport />;
+      case 'settings':
+        return <SettingsPanel />;
       default:
         return <Dashboard />;
     }
@@ -199,6 +220,23 @@ export default function Home() {
   // Responsive notification dropdown width
   const notificationDropdownWidth = isMobile ? 'w-[90vw] max-w-xs' : 'w-80';
 
+  const CurrentTabIcon = tabs.find(tab => tab.id === activeTab)?.icon || BarChart3;
+
+  // Define a mapping from tab id to gradient color classes
+  const tabGradients: Record<string, string> = {
+    dashboard: 'from-blue-500 to-cyan-500',
+    excel: 'from-green-500 to-emerald-500',
+    ai: 'from-purple-500 to-pink-500',
+    analytics: 'from-orange-500 to-red-500',
+    inventory: 'from-indigo-500 to-purple-500',
+    logistics: 'from-teal-500 to-cyan-500',
+    monitoring: 'from-yellow-500 to-orange-500',
+    database: 'from-gray-500 to-slate-500',
+    help: 'from-blue-500 to-indigo-500',
+    settings: 'from-gray-500 to-slate-500',
+  };
+  const logoGradient = tabGradients[activeTab] || 'from-primary-500 to-accent-500';
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header Bar */}
@@ -213,9 +251,16 @@ export default function Home() {
             <Menu className="w-6 h-6 text-primary-500" />
           </button>
           <div className="flex items-center space-x-2 min-w-0">
-            <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-accent-500 rounded-lg flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-white" aria-hidden="true" />
-            </div>
+            <motion.div
+              key={activeTab}
+              initial={{ scale: 0.8, rotate: -10, opacity: 0 }}
+              animate={{ scale: 1, rotate: 0, opacity: 1 }}
+              exit={{ scale: 0.8, rotate: 10, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              className={`w-10 h-10 bg-gradient-to-r ${logoGradient} rounded-lg flex items-center justify-center shadow-lg`}
+            >
+              <CurrentTabIcon className="w-6 h-6 text-white" aria-hidden="true" />
+            </motion.div>
             <span className="text-xl font-bold text-gray-900 truncate">i-WMS</span>
           </div>
         </div>
